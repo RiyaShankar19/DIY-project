@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles1.css">
+    <title>Your Instructables-Like Homepage</title>
+    <style>
+        /* Your CSS styles here */
+        body { 
+            background-image: url('bg.jpg');
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #FF5858;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+        nav {
+            background-color: #FF5858;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .project {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .project h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .project img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .project p {
+            color: #555;
+            line-height: 1.5;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Reduced Size Image" width="450" height="150">
+        </div>
+        <nav>
+            <ul>
+              <li><a href="home.html">Home</a></li>
+              <li><a href="project.html">Projects</a></li>
+              <li><a href="#">Create</a></li>
+              <li><a href="login.html">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="project">
+            <form id="registrationForm" action="register.php" method="post" onsubmit="return showPopup()">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+        <!-- More projects can be added here -->
+    </div>
+
+    <div id="popup" class="popup"></div> <!-- Popup message placeholder -->
+
+    <footer>
+        &copy; 2024 DIY & Crafting Community
+    </footer>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            var formData = new FormData(this);
+            fetch("register.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showPopup(data.message);
+                    // Redirect to the specified URL after a short delay
+                    setTimeout(function() {
+                        window.location.href = data.redirect_url;
+                    }, 3000); // Adjust delay time as needed
+                } else {
+                    alert(data.message); // Display error message if registration fails
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    
+        function showPopup(message) {
+            var popup = document.getElementById("popup");
+            popup.innerText = message;
+            popup.style.display = "block";
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 3000); // Hide the popup after 3 seconds (adjust as needed)
+        }
+    </script>
+    
+</body>
+</html>
